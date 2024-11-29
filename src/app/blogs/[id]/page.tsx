@@ -14,19 +14,24 @@ async function MockGetBlogDetailFromDataBase(id: string) {
 // src/app/blogs/[id]/page.tsx
 export default async function OneBlog({ params }: { params: { id: string } }) {
   const blog = (await MockGetBlogDetailFromDataBase(params.id)) as any
+  console.log('blog ', blog)
 
   // Server action
-  async function thumbUp(id: string) {
+  async function thumbUp(values: FormData) {
     'use server'
 
     // 直接更新数据库，给 id 对应的 blog 点赞
+    console.log('values ', values)
   }
 
   return (
     <div>
       <h1 className="text-3xl">{blog.title}</h1>
       <p>{blog.content}</p>
-      <button onClick={() => thumbUp(blog.id)}>点赞</button>
+      <form action={thumbUp}>
+        <input type="hidden" name="id" value={blog.id} />
+        <button type="submit">点赞</button>
+      </form>
     </div>
   )
 }
